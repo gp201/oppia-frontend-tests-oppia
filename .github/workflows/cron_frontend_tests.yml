@@ -45,6 +45,7 @@ jobs:
       - name: Suppress ENOSPC error from chokidar file watcher. See https://stackoverflow.com/a/32600959.
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - name: Run frontend tests ${{ matrix.id }}
+        id: frontend_test_run
         env:
           DEFAULT_FLAGS: '--run_minified_tests --skip_install --check_coverage --verbose'
         run: PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags || env.DEFAULT_FLAGS }}
