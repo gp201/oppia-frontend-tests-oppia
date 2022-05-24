@@ -48,10 +48,7 @@ jobs:
         env:
           DEFAULT_FLAGS: '--run_minified_tests --skip_install --check_coverage --verbose'
         run: PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags || env.DEFAULT_FLAGS }}
-  job_summary:
-    runs-on:  ${{ matrix.os }}
-    steps:
-      - name: Generate job summary
+      - name: Generate list using Markdown
         run: |
           echo "# Job summary - ${{ github.event.inputs.reason || 'run' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
