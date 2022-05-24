@@ -49,6 +49,10 @@ jobs:
         env:
           DEFAULT_FLAGS: '--run_minified_tests --skip_install --check_coverage --verbose'
         run: PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags || env.DEFAULT_FLAGS }} >> run.log
+      - uses: actions/upload-artifact@v3
+        with:
+          name: run_artifact
+          path: run.log
       - name: Generate list using Markdown
         run: |
           echo "# Job summary - ${{ github.event.inputs.reason || 'run' }}" >> $GITHUB_STEP_SUMMARY
