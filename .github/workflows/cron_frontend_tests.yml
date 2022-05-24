@@ -75,4 +75,5 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           git log --oneline -n 1 >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
-          cat run.log >> $GITHUB_STEP_SUMMARY
+          cat run.log | grep 'Seed for Frontend Test Execution Order' >> $GITHUB_STEP_SUMMARY
+          cat run.log | grep 'FAILED' >> $GITHUB_STEP_SUMMARY
