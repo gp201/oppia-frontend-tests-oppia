@@ -57,6 +57,4 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           git log --oneline -n 1 >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
-          echo "```" >> $GITHUB_STEP_SUMMARY # this is a codeblock
           cat run.log >> $GITHUB_STEP_SUMMARY
-          echo "```" >> $GITHUB_STEP_SUMMARY # this is a codeblock
