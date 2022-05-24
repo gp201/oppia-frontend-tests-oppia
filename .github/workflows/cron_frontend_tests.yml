@@ -48,7 +48,7 @@ jobs:
         id: frontend_test_run
         env:
           DEFAULT_FLAGS: '--run_minified_tests --skip_install --check_coverage --verbose'
-        run: PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags || env.DEFAULT_FLAGS }}
+        run: PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags || env.DEFAULT_FLAGS }} >> run.log
       - name: Generate list using Markdown
         run: |
           echo "# Job summary - ${{ github.event.inputs.reason || 'run' }}" >> $GITHUB_STEP_SUMMARY
@@ -56,4 +56,6 @@ jobs:
           date >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           git log --oneline -n 1 >> $GITHUB_STEP_SUMMARY
-          echo ${{ steps.frontend_test_run.outputs }} >> $GITHUB_STEP_SUMMARY
+          echo ``` >> $GITHUB_STEP_SUMMARY # this is a codeblock
+          echo cat run.log >> $GITHUB_STEP_SUMMARY
+          echo ``` >> $GITHUB_STEP_SUMMARY # this is a codeblock
