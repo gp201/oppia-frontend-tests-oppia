@@ -15,7 +15,21 @@ on:
         default: 'Automated frontend tests'
 
 jobs:
+  generate_summary:
+    runs-on:  ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@master
+        with:
+          repository: oppia/oppia
+      - name: Generate list using Markdown
+        run: |
+          echo "# Job summary - ${{ github.event.inputs.reason || 'run' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          date >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          git log --oneline -n 1 >> $GITHUB_STEP_SUMMARY
   frontend:
+    needs: generate_summary
     runs-on:  ${{ matrix.os }}
     strategy:
       matrix:
