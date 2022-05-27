@@ -59,7 +59,7 @@ jobs:
       - name: Suppress ENOSPC error from chokidar file watcher. See https://stackoverflow.com/a/32600959.
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - name: Edit combined-tests.spec.ts
-        run: ed -i 's/if (result.status !== \'excluded\') {/if (result.status !== \'excluded\' \&\& result.status !== \'SUCCESS\') {/g' core/templates/combined-tests.spec.ts
+        run: sed -i 's/if (result.status !== \'excluded\') {/if (result.status !== \'excluded\' \&\& result.status !== \'SUCCESS\') {/g' core/templates/combined-tests.spec.ts
       - name: Run frontend tests ${{ matrix.id }}
         id: frontend_test_run
         env:
