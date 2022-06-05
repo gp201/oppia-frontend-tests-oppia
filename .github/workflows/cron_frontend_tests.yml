@@ -13,6 +13,9 @@ on:
         description: 'Reason'
         required: false
         default: 'Automated frontend tests'
+      failed-only:
+        type: boolean
+        description: 'Print failed tests only.'
 
 jobs:
   generate_summary:
@@ -58,7 +61,10 @@ jobs:
       - uses: ./.github/actions/install-oppia-dependencies
       - name: Suppress ENOSPC error from chokidar file watcher. See https://stackoverflow.com/a/32600959.
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-      - name: Edit combined-tests.spec.ts
+      - name: Edit combined-tests.spec.ts to display failed tests only
+        env:
+          DEFAULT_FLAG: False
+        if: ${{ ithub.event.inputs.flags || env.DEFAULT_FLAG }}
         run: sed -i "s/if (result.status !== \'excluded\') {/if (result.status !== \'excluded\' \&\& result.status !== \'SUCCESS\') {/g" core/templates/combined-tests.spec.ts
       - name: Run frontend tests ${{ matrix.id }}
         id: frontend_test_run
