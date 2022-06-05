@@ -64,7 +64,7 @@ jobs:
       - name: Edit combined-tests.spec.ts to display failed tests only
         env:
           DEFAULT_FLAG: False
-        if: ${{ ithub.event.inputs.flags || env.DEFAULT_FLAG }}
+        if: ${{ github.event.inputs.flags || env.DEFAULT_FLAG }}
         run: sed -i "s/if (result.status !== \'excluded\') {/if (result.status !== \'excluded\' \&\& result.status !== \'SUCCESS\') {/g" core/templates/combined-tests.spec.ts
       - name: Run frontend tests ${{ matrix.id }}
         id: frontend_test_run
