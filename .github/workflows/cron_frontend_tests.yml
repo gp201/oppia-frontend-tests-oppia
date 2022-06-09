@@ -62,14 +62,7 @@ jobs:
         id: frontend_test_run
         env:
           DEFAULT_FLAGS: '--run_minified_tests --skip_install --check_coverage --verbose'
-        run: |
-          PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags || env.DEFAULT_FLAGS }} &
-          sleep 3m | wget http://localhost:9876/base/core/templates/combined-tests.spec.js
-      - uses: actions/upload-artifact@v3
-        if: ${{ always() }}
-        with:
-          name: run_artifact_${{ matrix.id }}
-          path: /core/templates/combined-tests.spec.js
+        run: PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags || env.DEFAULT_FLAGS }}
       - name: Generate list using Markdown
         if: ${{ failure() }}
         run: |
