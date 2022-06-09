@@ -34,7 +34,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-18.04]
-        id: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
+        id: [1]
       fail-fast: false
     steps:
       - uses: actions/checkout@master
@@ -62,12 +62,14 @@ jobs:
         id: frontend_test_run
         env:
           DEFAULT_FLAGS: '--run_minified_tests --skip_install --check_coverage --verbose'
-        run: PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags || env.DEFAULT_FLAGS }}
-#       - uses: actions/upload-artifact@v3
-#         if: ${{ always() }}
-#         with:
-#           name: run_artifact_${{ matrix.id }}
-#           path: run.log
+        run: |
+          PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags || env.DEFAULT_FLAGS }} &
+          sleep 3m | wget http://localhost:9876/base/core/templates/combined-tests.spec.js
+      - uses: actions/upload-artifact@v3
+        if: ${{ always() }}
+        with:
+          name: run_artifact_${{ matrix.id }}
+          path: /core/templates/combined-tests.spec.js
       - name: Generate list using Markdown
         if: ${{ failure() }}
         run: |
