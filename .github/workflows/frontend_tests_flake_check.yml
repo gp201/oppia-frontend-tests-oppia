@@ -20,24 +20,20 @@ env:
 
 jobs:
   generate_summary:
-    defaults:
-      run:
-        working-directory: ./oppia
     runs-on: [ubuntu-18.04]
     steps:
       - uses: actions/checkout@master
         with:
-          path: 'oppia-frontend-tests-oppia'
-      - uses: actions/checkout@master
-        with:
           repository: oppia/oppia
-          path: 'oppia'
+      - name: merge
+        run: |
+          sudo apt-get install git
+          git config --global user.email "mergeAction@example.com"
+          git config --global user.name "Oppia Merge Base Branch GitHub Action"
+          gh pr checkout ${{ github.event.inputs.checkout }}
+          git merge origin develop
       - name: Generate list using Markdown
         run: |
-          gh pr checkout ${{ github.event.inputs.checkout }}
-          git config pull.rebase false
-          git fetch origin develop
-          git merge
           echo "# Job summary - ${{ github.event.inputs.reason }} | ${{ github.event.inputs.checkout }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           date >> $GITHUB_STEP_SUMMARY
@@ -62,7 +58,13 @@ jobs:
         with:
           python-version: '3.7'
           architecture: 'x64'
-      - uses: ./.github/actions/merge
+      - name: merge
+        run: |
+          git config --global user.email "mergeAction@example.com"
+          git config --global user.name "Oppia Merge Base Branch GitHub Action"
+          gh pr checkout ${{ github.event.inputs.checkout }}
+          git merge origin develop
+        shell: bash
       - name: Cache node modules
         uses: actions/cache@v2
         env:
