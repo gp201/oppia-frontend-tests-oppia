@@ -20,6 +20,9 @@ env:
 
 jobs:
   generate_summary:
+    defaults:
+      run:
+        working-directory: ./oppia
     runs-on: [ubuntu-18.04]
     steps:
       - uses: actions/checkout@master
