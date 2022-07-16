@@ -25,16 +25,9 @@ jobs:
       - uses: actions/checkout@master
         with:
           repository: oppia/oppia
-      - name: merge
-        run: |
-          sudo apt-get install git
-          git config --global user.email "mergeAction@example.com"
-          git config --global user.name "Oppia Merge Base Branch GitHub Action"
-          gh pr checkout ${{ github.event.inputs.checkout }}
-          git merge --squash develop
-          git commit "Merge ${{ github.event.inputs.checkout }}"
       - name: Generate list using Markdown
         run: |
+          gh pr checkout ${{ github.event.inputs.checkout }}
           echo "# Job summary - ${{ github.event.inputs.reason }} | ${{ github.event.inputs.checkout }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           date >> $GITHUB_STEP_SUMMARY
@@ -81,10 +74,13 @@ jobs:
       - name: Suppress ENOSPC error from chokidar file watcher. See https://stackoverflow.com/a/32600959.
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - name: Run frontend tests ${{ matrix.id }}
-        run: PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags }}
+        run: |
+          gh pr checkout ${{ github.event.inputs.checkout }}
+          PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags }}
       - name: Generate list using Markdown
         if: ${{ failure() }}
         run: |
+          gh pr checkout ${{ github.event.inputs.checkout }}
           echo "## RUN ID: ${{ matrix.id }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           date >> $GITHUB_STEP_SUMMARY
