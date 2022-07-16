@@ -9,10 +9,14 @@ on:
         description: 'Flags'     
         required: true
         default: '--run_minified_tests --skip_install --check_coverage --verbose'
+      checkout:
+        description: 'Run frontend tests for a specific commit or PR'
+        required: false
+        default: 'develop'
       reason:
         description: 'Reason'
         required: false
-        default: 'Automated frontend tests'
+        default: 'Manual trigger for frontend tests'
 
 jobs:
   generate_summary:
@@ -62,10 +66,16 @@ jobs:
         id: frontend_test_run
         env:
           DEFAULT_FLAGS: '--run_minified_tests --skip_install --check_coverage --verbose'
-        run: PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags || env.DEFAULT_FLAGS }}
+          DEFAULT_BRANCH: 'develop'
+        run: |
+          git checkout ${{ github.event.inputs.checkout || env.DEFAULT_BRANCH }}
+          PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags || env.DEFAULT_FLAGS }}
       - name: Generate list using Markdown
         if: ${{ failure() }}
+        env:
+          DEFAULT_BRANCH: 'develop'
         run: |
+          git checkout ${{ github.event.inputs.checkout || env.DEFAULT_BRANCH  }}
           echo "## RUN ID: ${{ matrix.id }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           date >> $GITHUB_STEP_SUMMARY
