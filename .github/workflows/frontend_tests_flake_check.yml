@@ -25,9 +25,10 @@ jobs:
       - uses: actions/checkout@master
         with:
           repository: oppia/oppia
+      
       - name: Generate list using Markdown
         run: |
-          gh checkout pr ${{ github.event.inputs.checkout }}
+          h pr merge ${{ github.event.inputs.checkout }}
           echo "# Job summary - ${{ github.event.inputs.reason }} | ${{ github.event.inputs.checkout }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           date >> $GITHUB_STEP_SUMMARY
@@ -51,6 +52,8 @@ jobs:
         with:
           python-version: '3.7'
           architecture: 'x64'
+      - name: Merge
+        run: gh pr merge ${{ github.event.inputs.checkout }}
       - name: Cache node modules
         uses: actions/cache@v2
         env:
@@ -68,12 +71,10 @@ jobs:
       - name: Run frontend tests ${{ matrix.id }}
         id: frontend_test_run
         run: |
-          gh checkout pr ${{ github.event.inputs.checkout }}
           PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags }}
       - name: Generate list using Markdown
         if: ${{ failure() }}
         run: |
-          gh pr checkout ${{ github.event.inputs.checkout }}
           echo "## RUN ID: ${{ matrix.id }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           date >> $GITHUB_STEP_SUMMARY
