@@ -1,8 +1,5 @@
-name: Cron Job Frontend Karma tests
+name: Frontend tests flake check
 on:
-  schedule:
-    # * is a special character in YAML so you have to quote this string
-    - cron:  '00 1 * * 6'
   workflow_dispatch:
     inputs:
       flags:
