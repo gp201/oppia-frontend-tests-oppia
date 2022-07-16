@@ -26,7 +26,10 @@ jobs:
         with:
           repository: oppia/oppia
       - name: Generate list using Markdown
+        env:
+          DEFAULT_BRANCH: 'develop'
         run: |
+          git checkout ${{ github.event.inputs.checkout || env.DEFAULT_BRANCH  }}
           echo "# Job summary - ${{ github.event.inputs.reason || 'run' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           date >> $GITHUB_STEP_SUMMARY
