@@ -31,7 +31,7 @@ jobs:
           git config --global user.email "mergeAction@example.com"
           git config --global user.name "Oppia Merge Base Branch GitHub Action"
           gh pr checkout ${{ github.event.inputs.checkout }}
-          git pull develop --verbose
+          git pull origin develop --verbose
       - name: Generate list using Markdown
         run: |
           echo "# Job summary - ${{ github.event.inputs.reason }} | ${{ github.event.inputs.checkout }}" >> $GITHUB_STEP_SUMMARY
