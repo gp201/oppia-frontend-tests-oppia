@@ -28,7 +28,8 @@ jobs:
       - name: Generate list using Markdown
         run: |
           gh pr checkout ${{ github.event.inputs.checkout }}
-          git merge --allow-unrelated-histories
+          git remote add upstream https://github.com/oppia/oppia.git
+          git pull upstream develop
           echo "# Job summary - ${{ github.event.inputs.reason }} | ${{ github.event.inputs.checkout }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           date >> $GITHUB_STEP_SUMMARY
