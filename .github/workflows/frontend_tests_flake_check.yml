@@ -22,15 +22,16 @@ jobs:
   generate_summary:
     runs-on: [ubuntu-18.04]
     steps:
+      - uses: actions/checkout@v2
       - uses: actions/checkout@master
         with:
           repository: oppia/oppia
-      
       - name: Generate list using Markdown
         run: |
           gh pr checkout ${{ github.event.inputs.checkout }}
           git config pull.rebase false
-          git pull origin develop
+          git fetch origin develop
+          git merge
           echo "# Job summary - ${{ github.event.inputs.reason }} | ${{ github.event.inputs.checkout }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           date >> $GITHUB_STEP_SUMMARY
@@ -47,21 +48,21 @@ jobs:
         id: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
       fail-fast: false
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
           repository: oppia/oppia
       - uses: actions/setup-python@v2
         with:
           python-version: '3.7'
           architecture: 'x64'
-      - name: Merge
-        run: gh pr merge ${{ github.event.inputs.checkout }}
+      - uses: ./.github/actions/merge
       - name: Cache node modules
         uses: actions/cache@v2
         env:
           cache-name: cache-node-modules
         with:
-          path: /home/runner/work/oppia-frontend-tests-oppia/yarn_cache
+          path: /home/runner/work/oppia/yarn_cache
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -71,9 +72,7 @@ jobs:
       - name: Suppress ENOSPC error from chokidar file watcher. See https://stackoverflow.com/a/32600959.
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - name: Run frontend tests ${{ matrix.id }}
-        id: frontend_test_run
-        run: |
-          PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags }}
+        run: PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags }}
       - name: Generate list using Markdown
         if: ${{ failure() }}
         run: |
