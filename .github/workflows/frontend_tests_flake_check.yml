@@ -15,6 +15,9 @@ on:
         required: false
         default: 'Manual trigger for frontend tests'
 
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   generate_summary:
     runs-on: [ubuntu-18.04]
@@ -23,12 +26,10 @@ jobs:
         with:
           repository: oppia/oppia
       - name: Generate list using Markdown
-        env:
-          DEFAULT_BRANCH: 'develop'
         run: |
-          gh pr checkout ${{ github.event.inputs.checkout || env.DEFAULT_BRANCH  }}
+          gh pr checkout ${{ github.event.inputs.checkout }}
           git pull develop
-          echo "# Job summary - ${{ github.event.inputs.reason || 'run' }}" >> $GITHUB_STEP_SUMMARY
+          echo "# Job summary - ${{ github.event.inputs.reason }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           date >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
@@ -41,8 +42,6 @@ jobs:
         os: [ubuntu-18.04]
         id: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
       fail-fast: false
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@master
         with:
@@ -67,19 +66,14 @@ jobs:
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - name: Run frontend tests ${{ matrix.id }}
         id: frontend_test_run
-        env:
-          DEFAULT_FLAGS: '--run_minified_tests --skip_install --check_coverage --verbose'
-          DEFAULT_BRANCH: 'develop'
         run: |
-          gh pr checkout ${{ github.event.inputs.checkout || env.DEFAULT_BRANCH  }}
+          gh pr checkout ${{ github.event.inputs.checkout }}
           git pull develop
-          PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags || env.DEFAULT_FLAGS }}
+          PYTHONIOENCODING=utf-8 python -m scripts.run_frontend_tests ${{ github.event.inputs.flags }}
       - name: Generate list using Markdown
         if: ${{ failure() }}
-        env:
-          DEFAULT_BRANCH: 'develop'
         run: |
-          gh pr checkout ${{ github.event.inputs.checkout || env.DEFAULT_BRANCH  }}
+          gh pr checkout ${{ github.event.inputs.checkout }}
           git pull develop
           echo "## RUN ID: ${{ matrix.id }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
