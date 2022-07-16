@@ -22,10 +22,13 @@ jobs:
   generate_summary:
     runs-on: [ubuntu-18.04]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@master
+        with:
+          path: 'oppia-frontend-tests-oppia'
       - uses: actions/checkout@master
         with:
           repository: oppia/oppia
+          path: 'oppia'
       - name: Generate list using Markdown
         run: |
           gh pr checkout ${{ github.event.inputs.checkout }}
