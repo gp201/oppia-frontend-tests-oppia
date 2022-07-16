@@ -27,6 +27,7 @@ jobs:
           repository: oppia/oppia
       - name: Generate list using Markdown
         run: |
+          sudo apt-get install git -y
           gh pr checkout ${{ github.event.inputs.checkout }}
           echo "# Job summary - ${{ github.event.inputs.reason }} | ${{ github.event.inputs.checkout }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
