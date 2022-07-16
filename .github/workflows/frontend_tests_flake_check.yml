@@ -52,13 +52,6 @@ jobs:
         with:
           python-version: '3.7'
           architecture: 'x64'
-      - name: merge
-        run: |
-          git config --global user.email "mergeAction@example.com"
-          git config --global user.name "Oppia Merge Base Branch GitHub Action"
-          gh pr checkout ${{ github.event.inputs.checkout }}
-          git merge origin develop
-        shell: bash
       - name: Cache node modules
         uses: actions/cache@v2
         env:
