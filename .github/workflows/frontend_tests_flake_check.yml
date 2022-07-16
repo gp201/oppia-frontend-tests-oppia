@@ -29,6 +29,7 @@ jobs:
         run: |
           gh pr checkout ${{ github.event.inputs.checkout }}
           git remote add upstream https://github.com/oppia/oppia.git
+          git config --global pull.ff true
           git pull upstream develop
           echo "# Job summary - ${{ github.event.inputs.reason }} | ${{ github.event.inputs.checkout }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
