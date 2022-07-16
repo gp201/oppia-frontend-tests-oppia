@@ -28,7 +28,7 @@ jobs:
       
       - name: Generate list using Markdown
         run: |
-          h pr merge ${{ github.event.inputs.checkout }}
+          gh pr merge ${{ github.event.inputs.checkout }}
           echo "# Job summary - ${{ github.event.inputs.reason }} | ${{ github.event.inputs.checkout }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           date >> $GITHUB_STEP_SUMMARY
