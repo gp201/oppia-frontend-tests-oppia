@@ -28,7 +28,7 @@ jobs:
       
       - name: Generate list using Markdown
         run: |
-          gh pr checkout ${{ github.event.inputs.checkout }
+          gh pr checkout ${{ github.event.inputs.checkout }}
           git pull origin ${{ github.base_ref }}
           echo "# Job summary - ${{ github.event.inputs.reason }} | ${{ github.event.inputs.checkout }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
