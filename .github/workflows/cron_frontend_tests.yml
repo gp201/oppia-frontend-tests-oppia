@@ -1,4 +1,4 @@
-name: Cron Job Frontend Karma tests
+name: Frontend tests health
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
